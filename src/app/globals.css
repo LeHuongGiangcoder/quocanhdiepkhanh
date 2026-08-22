@@ -45,6 +45,13 @@
      sọc nên phóng to lên là nhoè. Gradient thì nét ở mọi mật độ điểm ảnh, và
      chỉnh bề rộng cột chỉ bằng một biến.
   */
+  /*
+     Hạt giấy cũ. Sinh bằng feTurbulence trong data URI chứ không dùng file ảnh:
+     nét ở mọi mật độ điểm ảnh, không tốn thêm một lượt tải, và `stitchTiles`
+     lo phần ghép liền mạch.
+  */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+
   --stripe-w: clamp(26px, 6vw, 42px);
   --stripe-red: repeating-linear-gradient(
     90deg,
@@ -219,9 +226,30 @@ a {
   color: var(--fg);
 }
 
-/* Nền đỏ kẻ sọc — dùng cho hero và agenda */
+/* Nền đỏ kẻ sọc — dùng cho hero và RSVP */
 .section--red-stripe {
   background-image: var(--stripe-red);
+}
+
+/* Nền đỏ đậm hơn — dùng cho agenda */
+.section--red-deep {
+  background-color: var(--c-red-deep);
+}
+
+/*
+   Lớp hạt giấy cũ phủ lên nền trơn. Chỉ dùng cho section KHÔNG kẻ sọc — chồng
+   lên sọc thì rối. Nằm dưới nội dung (z-index -1, gói gọn trong section nhờ
+   `isolation: isolate`) nên chữ vẫn sắc nét.
+*/
+.section--grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--grain);
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Đường chỉ mảnh phân cách hai section */

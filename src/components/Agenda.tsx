@@ -33,7 +33,7 @@ export function Agenda() {
   const height = agenda.length * CELL;
 
   return (
-    <section id="agenda" className="section section--red" aria-labelledby="agenda-title">
+    <section id="agenda" className="section section--red section--red-deep section--grain" aria-labelledby="agenda-title">
       {/* Nền đỏ nên hoạ tiết dùng bộ kem */}
       <Decor src="beige/sparkle" x="4%" y="46%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="4.8s" />
       <Decor src="beige/starburst" x="88%" y="62%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="5.6s" delay="-2s" />
