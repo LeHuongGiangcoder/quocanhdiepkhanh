@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Decor } from "./Decor";
 import { Reveal } from "./Reveal";
 import { rsvp } from "@/data/wedding";
 import s from "./Rsvp.module.css";
@@ -71,9 +70,7 @@ export function Rsvp() {
 
   return (
     <section id="rsvp" className="section section--red section--red-stripe" aria-labelledby="rsvp-title">
-      {/* Nền đỏ nên hoạ tiết dùng bộ kem */}
-      <Decor src="beige/letters" x="-6%" y="6%" w="clamp(78px, 19vw, 172px)" r="-8deg" motion="sway" duration="10s" />
-
+      {/* Không rải hoạ tiết ở đây — chỉ có hai chấm lấp lánh cạnh nút gửi */}
       <div className="container container--narrow sheet">
         <img className="seal" src="/art/seal.webp" alt="" aria-hidden="true" />
         <Reveal className="section-head">
