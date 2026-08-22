@@ -19,8 +19,7 @@ export function ThankYou() {
   return (
     <section id="cam-on" className="section section--beige" aria-labelledby="cam-on-title">
       {/* Nền be nên hoạ tiết dùng bộ đỏ */}
-      <Decor src="red/bouquet" x="-3%" y="8%" w="clamp(70px, 17vw, 150px)" r="-8deg" motion="float" duration="9s" />
-      <Decor src="red/bouquet" x="84%" y="72%" w="clamp(62px, 15vw, 132px)" r="9deg" motion="float" duration="10s" delay="-3s" />
+      <Decor src="red/lips" x="80%" y="10%" w="clamp(56px, 14vw, 118px)" r="-14deg" motion="wobble" duration="7s" />
       <Decor src="red/sparkle" x="12%" y="52%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="4.6s" />
       <Decor src="red/starburst" x="86%" y="24%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="5.4s" delay="-1.5s" />
       <Decor src="red/sparkle" x="76%" y="88%" w="clamp(24px, 5.5vw, 52px)" motion="twinkle" duration="6.2s" delay="-3s" />

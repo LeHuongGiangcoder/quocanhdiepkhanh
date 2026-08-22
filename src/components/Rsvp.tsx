@@ -70,12 +70,9 @@ export function Rsvp() {
   }
 
   return (
-    <section id="rsvp" className="section section--red" aria-labelledby="rsvp-title">
+    <section id="rsvp" className="section section--red section--red-stripe" aria-labelledby="rsvp-title">
       {/* Nền đỏ nên hoạ tiết dùng bộ kem */}
       <Decor src="beige/letters" x="-6%" y="6%" w="clamp(78px, 19vw, 172px)" r="-8deg" motion="sway" duration="10s" />
-      <Decor src="beige/bow" x="82%" y="3%" w="clamp(72px, 18vw, 158px)" r="7deg" motion="sway" duration="9s" delay="-2s" />
-      <Decor src="beige/dove" x="86%" y="74%" w="clamp(54px, 13vw, 112px)" r="-9deg" motion="float" duration="8s" delay="-1s" />
-      <Decor src="beige/starburst" x="2%" y="68%" w="clamp(28px, 7vw, 66px)" motion="twinkle" duration="5.2s" />
 
       <div className="container container--narrow sheet">
         <img className="seal" src="/art/seal.webp" alt="" aria-hidden="true" />
@@ -181,15 +178,23 @@ export function Rsvp() {
               ) : null}
 
               <div className={s.submit}>
+                <img className={`${s.blink} twinkle`} src="/art/red/sparkle.webp" alt="" aria-hidden="true" />
                 <button type="submit" className="btn btn--stamp" disabled={status === "sending"}>
                   <span className="btn__star" aria-hidden="true">
                     ★
                   </span>
-                  {status === "sending" ? "Đang gửi…" : "Gửi lời hồi âm"}
+                  {status === "sending" ? "Đang gửi…" : "Xác nhận"}
                   <span className="btn__star" aria-hidden="true">
                     ★
                   </span>
                 </button>
+                <img
+                  className={`${s.blink} twinkle`}
+                  style={{ "--delay": "-2.4s" } as React.CSSProperties}
+                  src="/art/red/starburst.webp"
+                  alt=""
+                  aria-hidden="true"
+                />
               </div>
             </form>
           )}

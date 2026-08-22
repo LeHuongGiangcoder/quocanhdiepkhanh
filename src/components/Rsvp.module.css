@@ -22,8 +22,16 @@
 
 .submit {
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.25rem);
   padding-top: var(--sp-2xs);
+}
+
+/* Hai chấm lấp lánh nhấp nháy hai bên nút gửi */
+.blink {
+  width: clamp(24px, 6vw, 42px);
+  flex: none;
 }
 
 .done {
