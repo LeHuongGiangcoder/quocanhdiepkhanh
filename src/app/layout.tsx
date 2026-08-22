@@ -28,7 +28,29 @@ const description = `Thiệp cưới của ${couple.groomFull} và ${couple.brid
 export const metadata: Metadata = {
   title,
   description,
-  openGraph: { title, description, type: "website", locale: "vi_VN" },
+  icons: {
+    icon: "/components/40.png",
+  },
+  openGraph: { 
+    title, 
+    description, 
+    type: "website", 
+    locale: "vi_VN",
+    images: [
+      {
+        url: "/couple/couple%201.png",
+        width: 1200,
+        height: 630,
+        alt: "Groom & Bride",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/couple/couple%201.png"],
+  },
 };
 
 export const viewport: Viewport = {
