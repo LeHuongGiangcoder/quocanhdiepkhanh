@@ -26,7 +26,7 @@ Dresscode (be sọc) → RSVP (đỏ sọc) → Cảm ơn (be).
 
 | Nhóm | Có gì |
 |---|---|
-| Layout | `.section` + biến thể `--beige` / `--stripe` / `--red` / `--red-stripe` / `--red-deep`, `.container`, `.stack`, `.section-head` |
+| Layout | `.section` + biến thể `--beige` / `--beige-light` / `--stripe` / `--red` / `--red-stripe` / `--red-deep` / `--grain`, `.container`, `.stack`, `.section-head` |
 | Chữ | `.display` `.h1`–`.h4` `.eyebrow` `.lead` `.script` `.caption` `.numeral` |
 | Nút | `.btn` + `.btn--stamp` `.btn--outline` `.btn--ghost` |
 | Bề mặt | `.sheet` (giấy hình con tem) `.seal` `.stamp` `.calendar` `.chip` |

@@ -207,6 +207,11 @@ a {
   background-color: var(--c-beige);
 }
 
+/* Nền be sáng hơn — dùng cho section cảm ơn */
+.section--beige-light {
+  background-color: var(--c-cream);
+}
+
 /* Nền be kẻ sọc */
 .section--stripe {
   background-color: var(--c-beige);

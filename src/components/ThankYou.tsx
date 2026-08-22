@@ -17,7 +17,7 @@ const CATS = [
 
 export function ThankYou() {
   return (
-    <section id="cam-on" className="section section--beige section--grain" aria-labelledby="cam-on-title">
+    <section id="cam-on" className="section section--beige section--beige-light section--grain" aria-labelledby="cam-on-title">
       {/* Nền be nên hoạ tiết dùng bộ đỏ */}
       <Decor src="red/lips" x="80%" y="10%" w="clamp(56px, 14vw, 118px)" r="-14deg" motion="wobble" duration="7s" />
       <Decor src="red/sparkle" x="12%" y="52%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="4.6s" />
