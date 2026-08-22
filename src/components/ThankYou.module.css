@@ -1,0 +1,56 @@
+.words {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-md);
+  max-width: 46ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.words .script {
+  margin-top: var(--sp-2xs);
+}
+
+/* Cả nhà: hai đứa một hàng, ba bé mèo một hàng nhỏ hơn ở dưới */
+.crew {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 0.2rem + 1.2vw, 1rem);
+  padding-top: var(--sp-md);
+}
+
+.crewRow {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.5rem, 0.2rem + 1.6vw, 1.75rem);
+}
+
+.member {
+  width: var(--size, 90px);
+  transform-origin: 50% 85%;
+}
+
+.human {
+  --size: clamp(104px, 26vw, 168px);
+}
+
+.cat {
+  --size: clamp(58px, 15vw, 96px);
+}
+
+.cats {
+  text-align: center;
+}
+
+.hashtag {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-h3);
+  font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 72;
+  text-align: center;
+  color: var(--fg-head);
+  padding-top: var(--sp-md);
+}

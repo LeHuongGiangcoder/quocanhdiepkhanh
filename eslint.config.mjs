@@ -13,6 +13,16 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      /*
+        Ảnh trong /public/art đã được scripts/prepare-assets.py cắt, thu nhỏ và
+        xuất WebP sẵn ở đúng cỡ hiển thị. Cho next/image tối ưu lại lần nữa lúc
+        chạy chỉ tốn thêm tiền mà không nhanh hơn, nên dùng thẳng <img>.
+      */
+      "@next/next/no-img-element": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -1,0 +1,117 @@
+/*
+   Bố cục ba cột: [nội dung trái] [sợi dây] [nội dung phải].
+   Cột giữa hẹp hơn chiều cao hàng nên sợi dây bị ép ngang lại một chút —
+   đúng ý đồ, sóng ôm sát trục dọc như thiệp giấy.
+*/
+.timeline {
+  --row-h: clamp(118px, 30vw, 158px);
+  --rail-w: clamp(64px, 17vw, 112px);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr var(--rail-w) 1fr;
+}
+
+.rail {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+  color: rgba(255, 251, 239, 0.5);
+}
+
+.dots {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  translate: -50% -50%;
+  border-radius: var(--r-pill);
+  background: var(--fg-head);
+}
+
+.heart {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 15px;
+  translate: -50% 0;
+  color: var(--fg-head);
+}
+
+.list {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  grid-template-columns: subgrid;
+  grid-auto-rows: var(--row-h);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Mỗi mốc chiếm đúng một hàng, so le trái phải — grid-row đặt trong JSX */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.left {
+  grid-column: 1;
+  justify-content: flex-end;
+}
+
+.right {
+  grid-column: 3;
+  justify-content: flex-start;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.left .entry {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.right .entry {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.icon {
+  width: clamp(44px, 12vw, 76px);
+  margin-bottom: 0.15rem;
+  opacity: 0.9;
+}
+
+.time {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 0.9rem + 1.2vw, 1.75rem);
+  font-variation-settings: "SOFT" 50, "WONK" 1, "opsz" 72;
+  line-height: 1.05;
+  color: var(--fg-head);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.45;
+  color: var(--fg-muted);
+  text-wrap: balance;
+}

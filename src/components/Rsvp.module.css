@@ -1,0 +1,51 @@
+.form,
+.done {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--sp-md);
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xs);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.submit {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--sp-2xs);
+}
+
+.done {
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-md);
+}
+
+.seal {
+  width: clamp(72px, 12vw, 104px);
+  animation: sealIn 700ms var(--ease-out) both;
+}
+
+@keyframes sealIn {
+  from {
+    opacity: 0;
+    scale: 1.5;
+    rotate: -18deg;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    rotate: -6deg;
+  }
+}

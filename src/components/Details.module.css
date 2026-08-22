@@ -1,0 +1,29 @@
+.divider {
+  width: min(100%, 14rem);
+  height: 0;
+  margin: clamp(1.75rem, 1rem + 3vw, 3rem) auto;
+  border: 0;
+  border-top: 1px dashed var(--rule);
+}
+
+.venue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2xs);
+  text-align: center;
+}
+
+.illustration {
+  width: min(100%, 30rem);
+  margin-bottom: var(--sp-sm);
+}
+
+.venue .eyebrow {
+  margin-bottom: var(--sp-2xs);
+}
+
+.venue .script {
+  margin-block: var(--sp-2xs) var(--sp-md);
+  max-width: 34ch;
+}

@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quốc Anh & Diệp Khanh — thiệp cưới online
 
-## Getting Started
-
-First, run the development server:
+Next.js 16 (App Router) · không thêm thư viện UI nào · hoạt ảnh thuần CSS.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Sửa nội dung
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Toàn bộ chữ nghĩa nằm trong **`src/data/wedding.ts`** — tên, ngày giờ, địa điểm,
+agenda, lời cảm ơn, nhạc nền. Không cần đụng tới code của section.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> ⚠️ Dữ liệu hiện tại là **placeholder** để dựng giao diện.
 
-## Learn More
+## Design system
 
-To learn more about Next.js, take a look at the following resources:
+`src/app/globals.css` giữ toàn bộ token và component dùng chung. Quy tắc: không
+viết màu hay khoảng cách thô trong component, luôn dùng token hoặc class ở đây.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Xem trực quan tại **`/styleguide`** (không index, không link từ trang chính).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Sáu section, nền đỏ và be xen kẽ: Hero (đỏ sọc) → Thông tin (be) → Agenda (đỏ) →
+Dresscode (be sọc) → RSVP (đỏ) → Cảm ơn (be).
 
-## Deploy on Vercel
+| Nhóm | Có gì |
+|---|---|
+| Layout | `.section` + biến thể `--beige` / `--stripe` / `--red` / `--red-stripe`, `.container`, `.stack`, `.section-head` |
+| Chữ | `.display` `.h1`–`.h4` `.eyebrow` `.lead` `.script` `.caption` `.numeral` |
+| Nút | `.btn` + `.btn--stamp` `.btn--outline` `.btn--ghost` |
+| Bề mặt | `.sheet` (giấy hình con tem) `.seal` `.stamp` `.calendar` `.chip` |
+| Form | `.field` `.input` `.textarea` `.select` `.choice` |
+| Chuyển động | `.decor` `.sway` `.float` `.wobble` `.twinkle` `.reveal` |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Hai quy ước quan trọng:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Hoạ tiết dùng ngược màu nền.** Section đỏ → hoạ tiết bộ `beige/*`; section be
+  → hoạ tiết bộ `red/*`.
+- **Nền kẻ sọc phải lót `.sheet`** trước khi đặt nội dung lên, nếu không chữ bị rối.
+
+`.section--red`, `.sheet`, `.paper` và `.medallion` đều tự đặt lại các biến vai
+trò màu (`--fg`, `--fg-head`, `--surface`…), nên mọi thứ đặt bên trong tự ăn đúng
+màu mà không cần override.
+
+## Nền
+
+Sọc vẽ bằng `repeating-linear-gradient`, không lát ảnh: ảnh vải gốc chỉ có 28px
+cho một cặp sọc nên phóng to lên là nhoè. Bề rộng cột chỉnh bằng một biến duy
+nhất, `--stripe-w`.
+
+## Ảnh
+
+`public/art/` là ảnh đã tối ưu, **sinh ra tự động** — đừng sửa tay. File gốc nằm ở
+`public/components`, `public/couple`, `public/drawing`, `public/decorative *`.
+Thêm hoặc thay ảnh gốc xong thì chạy lại:
+
+```bash
+python3 scripts/prepare-assets.py
+```
+
+Script cắt viền trong suốt, thu nhỏ, xuất WebP và dựng ô lát nền liền mạch.
+
+## Font
+
+Tiêu đề dùng **Fraunces**, thân bài dùng **Inter** (cả hai đều self-host qua
+`next/font`). PP Editorial New trong `public/font/` **không dùng được** vì thiếu
+gần hết dấu tiếng Việt (`ạ ằ ắ ầ ấ ề ế ồ ố ơ ư ự …`) — kể cả chữ "Quốc" cũng vỡ.
+
+## RSVP
+
+Xem `docs/rsvp-google-sheets.md`. Khai báo `NEXT_PUBLIC_RSVP_ENDPOINT`
+(mẫu ở `.env.example`). Chưa khai báo thì form vẫn chạy, dữ liệu lưu tạm ở
+`localStorage`.
+
+## Deploy
+
+Vercel, preset Next.js, không cần chỉnh gì. Nhớ thêm biến môi trường
+`NEXT_PUBLIC_RSVP_ENDPOINT` trong Settings trước khi deploy production.
