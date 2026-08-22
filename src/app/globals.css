@@ -247,9 +247,16 @@ a {
   inset: 0;
   z-index: -1;
   background-image: var(--grain);
-  mix-blend-mode: overlay;
-  opacity: 0.4;
+  /* Nền sáng: hạt tối đi (multiply) */
+  mix-blend-mode: multiply;
+  opacity: 0.22;
   pointer-events: none;
+}
+
+/* Nền tối: multiply gần như không thấy gì, phải để hạt sáng lên (screen) */
+.section--red.section--grain::after {
+  mix-blend-mode: screen;
+  opacity: 0.2;
 }
 
 /* Đường chỉ mảnh phân cách hai section */
