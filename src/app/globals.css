@@ -52,17 +52,14 @@
   */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
 
+  /*
+     Sọc = ảnh vải thật (public/background). Tile đã cắt đúng bội số chu kỳ sọc
+     và soi gương theo chiều dọc nên lặp kín cả hai chiều, không lộ mối nối.
+  */
   --stripe-w: clamp(26px, 6vw, 42px);
-  --stripe-red: repeating-linear-gradient(
-    90deg,
-    rgba(94, 7, 14, 0.55) 0 var(--stripe-w),
-    rgba(139, 50, 51, 0.35) var(--stripe-w) calc(var(--stripe-w) * 2)
-  );
-  --stripe-beige: repeating-linear-gradient(
-    90deg,
-    rgba(222, 210, 175, 0.6) 0 var(--stripe-w),
-    rgba(255, 251, 239, 0) var(--stripe-w) calc(var(--stripe-w) * 2)
-  );
+  --stripe-tile: calc(var(--stripe-w) * 8);
+  --stripe-red: url("/background/stripe-red.jpg");
+  --stripe-beige: url("/background/stripe-beige.jpg");
 
   /* Typography */
   --font-display: var(--font-fraunces), "Playfair Display", Georgia, serif;
@@ -150,6 +147,8 @@ html {
 body {
   min-height: 100dvh;
   background-color: var(--c-beige);
+  background-image: var(--stripe-beige);
+  background-size: var(--stripe-tile) auto;
   color: var(--fg);
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -202,23 +201,29 @@ a {
   padding-inline: var(--pad-inline);
 }
 
-/* Nền be trơn (mặc định) */
+/* Vải be (mặc định) */
 .section--beige {
   background-color: var(--c-beige);
+  background-image: var(--stripe-beige);
+  background-size: var(--stripe-tile) auto;
 }
 
-/* Nền be sáng hơn — dùng cho section cảm ơn */
+/* Vải be, sáng hơn một chút — dùng cho section cảm ơn */
 .section--beige-light {
   background-color: var(--c-cream);
+  background-image: linear-gradient(rgba(255, 251, 239, 0.5), rgba(255, 251, 239, 0.5)),
+    var(--stripe-beige);
+  background-size: auto, var(--stripe-tile) auto;
 }
 
-/* Nền be kẻ sọc */
+/* Alias cũ — nay trùng với .section--beige vì sọc đã nằm sẵn trong ảnh vải */
 .section--stripe {
   background-color: var(--c-beige);
   background-image: var(--stripe-beige);
+  background-size: var(--stripe-tile) auto;
 }
 
-/* Nền đỏ — đảo toàn bộ vai trò màu */
+/* Vải đỏ — đảo toàn bộ vai trò màu */
 .section--red {
   --bg: var(--c-red);
   --fg: rgba(255, 251, 239, 0.86);
@@ -228,22 +233,28 @@ a {
   --surface: rgba(255, 251, 239, 0.07);
   --surface-edge: rgba(255, 251, 239, 0.26);
   background-color: var(--c-red);
+  background-image: var(--stripe-red);
+  background-size: var(--stripe-tile) auto;
   color: var(--fg);
 }
 
-/* Nền đỏ kẻ sọc — dùng cho hero và RSVP */
+/* Alias cũ — sọc đã nằm sẵn trong ảnh vải */
 .section--red-stripe {
   background-image: var(--stripe-red);
+  background-size: var(--stripe-tile) auto;
 }
 
-/* Nền đỏ đậm hơn — dùng cho agenda */
+/* Vải đỏ, tối hơn một chút — dùng cho agenda */
 .section--red-deep {
   background-color: var(--c-red-deep);
+  background-image: linear-gradient(rgba(92, 1, 23, 0.42), rgba(92, 1, 23, 0.42)),
+    var(--stripe-red);
+  background-size: auto, var(--stripe-tile) auto;
 }
 
 /*
-   Lớp hạt giấy cũ phủ lên nền trơn. Chỉ dùng cho section KHÔNG kẻ sọc — chồng
-   lên sọc thì rối. Nằm dưới nội dung (z-index -1, gói gọn trong section nhờ
+   Lớp hạt giấy cũ phủ lên nền vải. Để nhẹ tay vì ảnh vải đã có sẵn thớ dệt.
+   Nằm dưới nội dung (z-index -1, gói gọn trong section nhờ
    `isolation: isolate`) nên chữ vẫn sắc nét.
 */
 .section--grain::after {
@@ -254,14 +265,14 @@ a {
   background-image: var(--grain);
   /* Nền sáng: hạt tối đi (multiply) */
   mix-blend-mode: multiply;
-  opacity: 0.22;
+  opacity: 0.12;
   pointer-events: none;
 }
 
 /* Nền tối: multiply gần như không thấy gì, phải để hạt sáng lên (screen) */
 .section--red.section--grain::after {
   mix-blend-mode: screen;
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 /* Đường chỉ mảnh phân cách hai section */
