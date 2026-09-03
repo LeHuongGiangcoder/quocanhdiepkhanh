@@ -1,130 +1,170 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Decor } from "./Decor";
 import { useInvitationType } from "./GuestContext";
 import { Reveal } from "./Reveal";
-import { agenda, type AgendaItem } from "@/data/wedding";
+import { agenda, type PartyId } from "@/data/wedding";
 import s from "./Agenda.module.css";
 
-/*
-  Sợi dây uốn lượn nối các mốc giờ.
-  Mỗi mốc chiếm một ô vuông 100×100 trong viewBox, dây cong sang trái/phải xen
-  kẽ nên nối lại thành một đường liền mạch. Chấm tròn đặt ngay đỉnh cong —
-  toạ độ x tính bằng công thức Bézier bậc ba tại t = 0,5:
-      x = (P0 + 3·P1 + 3·P2 + P3) / 8 = (50 + 6·bulge + 50) / 8
-*/
-const BULGE = 92;
-const CELL = 100;
-
-/** Vị trí chấm tròn, tính theo phần trăm bề ngang cột dây */
-function dotX(index: number) {
-  const bulge = index % 2 === 0 ? BULGE : CELL - BULGE;
-  return (100 + 6 * bulge) / 8;
-}
-
-function railPath(count: number) {
-  let d = "M 50 0";
-  for (let i = 0; i < count; i += 1) {
-    const bulge = i % 2 === 0 ? BULGE : CELL - BULGE;
-    const top = i * CELL;
-    d += ` C ${bulge} ${top + 28}, ${bulge} ${top + 72}, 50 ${top + CELL}`;
-  }
-  return d;
-}
-
-function Track({ items }: { items: AgendaItem[] }) {
-  const height = items.length * CELL;
-
-  return (
-    <div className={s.timeline}>
-      <svg
-        className={s.rail}
-        viewBox={`0 0 ${CELL} ${height}`}
-        preserveAspectRatio="none"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path d={railPath(items.length)} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-
-      {/*
-        Chấm tròn vẽ bằng HTML chứ không phải <circle>: SVG bị kéo giãn không
-        đều (preserveAspectRatio="none") nên hình tròn trong đó sẽ méo thành bầu dục.
-      */}
-      <div className={s.dots} aria-hidden="true">
-        {items.map((item, i) => (
-          <span
-            key={item.time}
-            className={s.dot}
-            style={{ left: `${dotX(i)}%`, top: `${((i + 0.5) / items.length) * 100}%` }}
-          />
-        ))}
-        {/* Trái tim nhỏ khép lại cuối sợi dây */}
-        <svg className={s.heart} viewBox="0 0 24 22" fill="currentColor">
-          <path d="M12 21S1.8 14.3 1.8 7.6A5.6 5.6 0 0 1 12 4.4a5.6 5.6 0 0 1 10.2 3.2C22.2 14.3 12 21 12 21Z" />
-        </svg>
-      </div>
-
-      <ol className={s.list}>
-        {items.map((item, i) => (
-          <Reveal
-            as="li"
-            key={item.time}
-            className={`${s.row} ${i % 2 === 0 ? s.left : s.right}`}
-            style={{ gridRow: i + 1 }}
-            delay={i * 90}
-          >
-            <div className={s.entry}>
-              <img
-                className={`${s.icon} sway`}
-                style={{ "--dur": `${7 + i}s`, "--delay": `${-i * 1.3}s` } as CSSProperties}
-                src={`/art/beige/${item.icon}.webp`}
-                alt=""
-                aria-hidden="true"
-              />
-              <p className={s.time}>{item.time}</p>
-              <h3 className={s.title}>{item.title}</h3>
-              {item.note ? <p className={s.note}>{item.note}</p> : null}
-            </div>
-          </Reveal>
-        ))}
-      </ol>
-    </div>
-  );
-}
+/** Cuộn đi bao nhiêu thì coi như người xem đã hiểu là kéo ngang được */
+const SEEN = 24;
 
 export function Agenda() {
-  // Chỉ khách được mời tiệc chiều mới thấy chặng intimate
-  const intimate = useInvitationType() === "intimate";
+  // Chỉ khách được mời tiệc chiều mới thấy chặng intimate — và cũng chỉ họ mới
+  // thấy thanh chuyển giữa hai buổi tiệc.
+  const intimateGuest = useInvitationType() === "intimate";
+  const parties = agenda.parties.filter((p) => p.id !== "intimate" || intimateGuest);
+
+  const [active, setActive] = useState<PartyId>("main");
+  const [moved, setMoved] = useState(false);
+  const [liked, setLiked] = useState<Record<string, boolean>>({});
+  const [scrollable, setScrollable] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
+
+  /*
+     Kiểu thiệp về sau lượt gọi Sheet nên `parties` có thể dài ra giữa chừng.
+     Không tự nhảy tab khi điều đó xảy ra — chỉ cần chắc chắn tab đang chọn vẫn
+     còn tồn tại.
+  */
+  const current = parties.find((p) => p.id === active) ?? parties[0];
+  const hasTabs = parties.length > 1;
+
+  /*
+     Màn rộng thì cả hàng thẻ hiện hết một lượt, chẳng có gì để vuốt — mời người
+     ta vuốt lúc đó là nói dối. ResizeObserver bắn ngay lần observe đầu tiên nên
+     không cần đo thêm một nhịp riêng.
+  */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const observer = new ResizeObserver(() => {
+      setScrollable(track.scrollWidth > track.clientWidth + 1);
+    });
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [current.id]);
+
+  function choose(id: PartyId) {
+    setActive(id);
+    // Hàng thẻ được remount theo tab (key), scrollLeft về 0 — nhắc lại lời mời vuốt
+    setMoved(false);
+  }
+
+  /** Mũi tên trái/phải chuyển tab, đúng thói quen của một tablist */
+  function handleKeys(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+
+    const i = parties.findIndex((p) => p.id === current.id);
+    const next = parties[(i + (e.key === "ArrowRight" ? 1 : parties.length - 1)) % parties.length];
+    choose(next.id);
+    tabsRef.current?.querySelector<HTMLButtonElement>(`#agenda-tab-${next.id}`)?.focus();
+  }
 
   return (
     <section id="agenda" className="section section--red section--red-deep section--grain" aria-label="Chương trình">
       {/* Nền đỏ nên hoạ tiết dùng bộ kem */}
-      <Decor src="beige/sparkle" x="4%" y="46%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="4.8s" />
-      <Decor src="beige/starburst" x="88%" y="62%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="5.6s" delay="-2s" />
-      <Decor src="beige/bouquet" x="-2%" y="84%" w="clamp(58px, 14vw, 124px)" r="8deg" motion="sway" duration="9.5s" delay="-3s" hideOnMobile />
+      <Decor src="beige/sparkle" x="4%" y="18%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="4.8s" />
+      <Decor src="beige/starburst" x="90%" y="74%" w="clamp(26px, 6.5vw, 58px)" motion="twinkle" duration="5.6s" delay="-2s" />
+      <Decor src="beige/bouquet" x="-2%" y="82%" w="clamp(58px, 14vw, 124px)" r="8deg" motion="sway" duration="9.5s" delay="-3s" hideOnMobile />
 
       <div className="container container--content">
-        {intimate ? (
-          <>
-            <Reveal className="section-head">
-              <p className="eyebrow">{agenda.intimate.eyebrow}</p>
-              <h2 className="h2">{agenda.intimate.title}</h2>
-            </Reveal>
-
-            <Track items={agenda.intimate.items} />
-
-            <hr className={s.between} />
-          </>
-        ) : null}
-
-        <Reveal className={`section-head ${intimate ? s.second : ""}`}>
-          <p className="eyebrow">{agenda.main.eyebrow}</p>
-          <h2 className="h2">{agenda.main.title}</h2>
+        <Reveal className="section-head">
+          <p className="eyebrow">{agenda.eyebrow}</p>
+          <h2 className="h2">{current.title}</h2>
+          {current.note ? <p className="lead">{current.note}</p> : null}
         </Reveal>
 
-        <Track items={agenda.main.items} />
+        {/* Tấm thẻ bo góc, mượn dáng của bảng chia sẻ trên điện thoại */}
+        <Reveal className={s.panel} delay={80}>
+          <span className={s.grabber} aria-hidden="true" />
+
+          {hasTabs ? (
+            <div ref={tabsRef} className={s.tabs} role="tablist" aria-label="Chọn buổi tiệc" onKeyDown={handleKeys}>
+              {parties.map((party) => {
+                const on = party.id === current.id;
+                return (
+                  <button
+                    key={party.id}
+                    type="button"
+                    role="tab"
+                    id={`agenda-tab-${party.id}`}
+                    className={s.tab}
+                    aria-selected={on}
+                    aria-controls={`agenda-panel-${party.id}`}
+                    tabIndex={on ? 0 : -1}
+                    onClick={() => choose(party.id)}
+                  >
+                    {party.tab}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
+          <div
+            id={`agenda-panel-${current.id}`}
+            role={hasTabs ? "tabpanel" : undefined}
+            aria-labelledby={hasTabs ? `agenda-tab-${current.id}` : undefined}
+            tabIndex={hasTabs ? 0 : undefined}
+          >
+            <ol
+              // Đổi tab thì remount để hàng thẻ trở về đầu
+              key={current.id}
+              ref={trackRef}
+              className={s.track}
+              aria-label={current.title}
+              onScroll={(e) => setMoved(e.currentTarget.scrollLeft > SEEN)}
+            >
+              {current.items.map((item) => {
+                const key = `${current.id}-${item.time}`;
+                const on = Boolean(liked[key]);
+
+                return (
+                  <li key={key} className={s.card}>
+                    <button
+                      type="button"
+                      className={s.tap}
+                      aria-pressed={on}
+                      aria-label={`Thả tim cho ${item.title} lúc ${item.time}`}
+                      onClick={() => setLiked((prev) => ({ ...prev, [key]: !prev[key] }))}
+                    >
+                      <img className={s.photo} src={item.photo} alt={item.alt} width={560} height={747} />
+                      <span className={s.time} aria-hidden="true">
+                        {item.time}
+                      </span>
+                      <span className={s.heart} data-on={on || undefined} aria-hidden="true">
+                        <svg viewBox="0 0 24 22">
+                          <path d="M12 21S1.8 14.3 1.8 7.6A5.6 5.6 0 0 1 12 4.4a5.6 5.6 0 0 1 10.2 3.2C22.2 14.3 12 21 12 21Z" />
+                        </svg>
+                      </span>
+                    </button>
+
+                    <div className={s.meta}>
+                      <h3 className={s.title}>{item.title}</h3>
+                      {item.note ? <p className={s.note}>{item.note}</p> : null}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          <p className={s.hints}>
+            {scrollable ? (
+              <span className={s.hint} data-done={moved || undefined}>
+                {agenda.hint}
+                <span className={s.arrow} aria-hidden="true">
+                  →
+                </span>
+              </span>
+            ) : null}
+            <span className={s.likeHint}>{agenda.likeHint}</span>
+          </p>
+        </Reveal>
       </div>
     </section>
   );

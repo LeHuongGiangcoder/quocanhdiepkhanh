@@ -89,33 +89,99 @@ export const venue = {
   note: "Tới sớm một chút để còn kịp chụp hình với tụi mình nha.",
 };
 
-/** `icon` là tên file trong /public/art/beige và /public/art/red (cùng tên, hai màu) */
-export type AgendaItem = { time: string; title: string; note?: string; icon: string };
+export type AgendaItem = {
+  time: string;
+  title: string;
+  note?: string;
+  photo: string;
+  alt: string;
+};
+
+export type PartyId = "intimate" | "main";
+
+export type Party = {
+  id: PartyId;
+  tab: string;
+  title: string;
+  note?: string;
+  items: AgendaItem[];
+};
 
 /**
  * Hai chặng của ngày cưới. Chặng `intimate` chỉ hiện với khách được mời dự tiệc
  * chiều — xem `invitationType` trong <GuestProvider />.
  */
-export const agenda = {
-  intimate: {
-    eyebrow: "Tiệc intimate",
-    title: "Buổi chiều của những người thân nhất",
-    items: [
-      { time: "15:00", title: "Welcoming", note: "Photobooth, tiệc sún răng", icon: "cupcake" },
-      { time: "16:00", title: "Vows ceremony", icon: "bow" },
-      { time: "16:45", title: "Gap time", note: "Nghỉ ngơi, chờ tiệc chính", icon: "champagne" },
-    ] satisfies AgendaItem[],
-  },
-  main: {
-    eyebrow: "Agenda",
-    title: "Buổi tối hôm đó sẽ diễn ra như vầy",
-    items: [
-      { time: "17:30", title: "Đón khách", icon: "letters" },
-      { time: "18:00", title: "Làm lễ", icon: "bow" },
-      { time: "18:30", title: "Khai tiệc", icon: "champagne" },
-      { time: "19:30", title: "Games & quẩy", icon: "cake" },
-    ] satisfies AgendaItem[],
-  },
+export const agenda: {
+  eyebrow: string;
+  hint: string;
+  likeHint: string;
+  parties: Party[];
+} = {
+  eyebrow: "Agenda",
+  /** Gợi ý cho người xem biết hàng thẻ kéo ngang được */
+  hint: "vuốt sang phải để xem tiếp",
+  likeHint: "chạm vào ảnh để thả tim",
+  parties: [
+    {
+      id: "intimate",
+      tab: "Tiệc intimate",
+      title: "Buổi chiều của những người thân nhất",
+      note: "Một buổi chiều nhỏ, chỉ có những người tụi mình thương nhất.",
+      items: [
+        {
+          time: "15:00",
+          title: "Welcoming",
+          note: "Photobooth, tiệc sún răng",
+          photo: "/agenda/01-welcoming.webp",
+          alt: "Dải ảnh photobooth của hai đứa",
+        },
+        {
+          time: "16:00",
+          title: "Vows ceremony",
+          photo: "/agenda/02-vows.webp",
+          alt: "Cô dâu chú rể sau tấm voan cưới",
+        },
+        {
+          time: "16:45",
+          title: "Gap time",
+          note: "Nghỉ ngơi, chờ tiệc chính",
+          photo: "/agenda/03-gap.webp",
+          alt: "Hai đứa ngồi nghỉ trên nền vải mềm",
+        },
+      ],
+    },
+    {
+      id: "main",
+      tab: "Tiệc chính",
+      title: "Buổi tối hôm đó sẽ diễn ra như vầy",
+      items: [
+        {
+          time: "17:30",
+          title: "Đón khách",
+          photo: "/agenda/04-welcome.webp",
+          alt: "Hai đứa ôm nhau trước phông trái tim",
+        },
+        {
+          time: "18:00",
+          title: "Làm lễ",
+          photo: "/agenda/05-ceremony.webp",
+          alt: "Ảnh trắng đen của cô dâu chú rể",
+        },
+        {
+          time: "18:30",
+          title: "Khai tiệc",
+          photo: "/agenda/06-party.webp",
+          alt: "Cô dâu chú rể cầm trái tim đỏ lớn",
+        },
+        {
+          time: "19:30",
+          title: "Games & quẩy",
+          photo: "/agenda/07-games.webp",
+          alt: "Hai đứa nghịch trong khung ảnh dán đầy sticker",
+        },
+      ],
+    },
+  ],
 };
 
 export const dresscode = {
