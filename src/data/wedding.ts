@@ -175,7 +175,7 @@ export const agenda: {
         {
           time: "18:00",
           title: "Làm lễ",
-          photo: "/agenda/05-ceremony.webp",
+          photo: "/prewed/agenda/Bản sao của L1680075.jpg",
           alt: "Ảnh trắng đen của cô dâu chú rể",
         },
         {
