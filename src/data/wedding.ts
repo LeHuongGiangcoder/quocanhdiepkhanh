@@ -198,7 +198,7 @@ export const agenda: {
 export const dresscode = {
   title: "Dresscode",
   headline: "Đừng quan trọng màu sắc hay phong cách",
-  note: "Hãy cùng nhau lên ảnh thật là đẹp 🩲👙",
+  note: "Hãy cùng nhau lên ảnh thật đẹp 🩲👙",
 };
 
 /**
@@ -245,11 +245,11 @@ export const rsvp = {
 export const thanks = {
   title: "Cảm ơn bạn",
   lines: [
-    "Hẹn gặp bạn ở đám cưới — nhớ đói bụng sẵn nha!",
+    "Hẹn gặp bạn ở đám cưới, nhớ đói bụng sẵn nha!",
   ],
   signature: "Thương nhiều, Quốc Anh & Diệp Khanh",
   /** Ba bé mèo trong tranh — để trống mảng này nếu không muốn hiện tên */
-  cats: ["Bơ", "Sữa", "Mochi"],
+  cats: ["Lim", "Bư", "Muỗi"],
 };
 
 /**
