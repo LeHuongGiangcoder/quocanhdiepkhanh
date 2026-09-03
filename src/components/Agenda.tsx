@@ -10,6 +10,26 @@ import s from "./Agenda.module.css";
 /** Cuộn đi bao nhiêu thì coi như người xem đã hiểu là kéo ngang được */
 const SEEN = 24;
 
+const MINUTES_A_DAY = 24 * 60;
+
+function toMinutes(hhmm: string) {
+  const [h, m] = hhmm.split(":").map(Number);
+  return h * 60 + m;
+}
+
+/** "15:00" → "17:30" thành "2 tiếng 30 phút" */
+function duration(start: string, end: string) {
+  let total = toMinutes(end) - toMinutes(start);
+  // Tiệc kéo qua nửa đêm thì giờ tan nhỏ hơn giờ mở
+  if (total < 0) total += MINUTES_A_DAY;
+
+  const hours = Math.floor(total / 60);
+  const mins = total % 60;
+
+  if (!hours) return `${mins} phút`;
+  return mins ? `${hours} tiếng ${mins} phút` : `${hours} tiếng`;
+}
+
 export function Agenda() {
   // Chỉ khách được mời tiệc chiều mới thấy chặng intimate — và cũng chỉ họ mới
   // thấy thanh chuyển giữa hai buổi tiệc.
@@ -104,6 +124,14 @@ export function Agenda() {
               })}
             </div>
           ) : null}
+
+          {/* Mở lúc mấy giờ, tan lúc mấy giờ, và tất cả kéo dài bao lâu */}
+          <p className={s.window}>
+            <span className={s.clock}>
+              {current.start} <span aria-hidden="true">–</span> {current.end}
+            </span>
+            <span className={s.duration}>khoảng {duration(current.start, current.end)}</span>
+          </p>
 
           <div
             id={`agenda-panel-${current.id}`}

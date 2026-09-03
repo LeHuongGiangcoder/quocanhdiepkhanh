@@ -5,7 +5,11 @@
 */
 
 .wrap {
-  --pw: clamp(122px, 30vw, 196px);
+  /*
+     Bàn cờ rộng gấp 2,34 lần một mảnh, mà khung nội dung chỉ có 100vw trừ hai
+     lề section — nên chặn dưới phải đủ nhỏ để màn 320px vẫn không tràn ngang.
+  */
+  --pw: clamp(112px, 34vw, 240px);
   display: flex;
   flex-direction: column;
   align-items: center;

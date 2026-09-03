@@ -18,15 +18,19 @@ const CATS = [
 export function ThankYou() {
   return (
     <section id="cam-on" className="section section--beige section--beige-light section--grain" aria-labelledby="cam-on-title">
-      {/* Nền be nên hoạ tiết dùng bộ đỏ */}
-      <Decor src="red/lips" x="80%" y="10%" w="clamp(56px, 14vw, 118px)" r="-14deg" motion="wobble" duration="7s" />
-      <Decor src="red/sparkle" x="12%" y="52%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="4.6s" />
-      <Decor src="red/starburst" x="86%" y="24%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="5.4s" delay="-1.5s" />
-      <Decor src="red/sparkle" x="76%" y="88%" w="clamp(24px, 5.5vw, 52px)" motion="twinkle" duration="6.2s" delay="-3s" />
-      <Decor src="red/starburst" x="6%" y="84%" w="clamp(24px, 5.5vw, 52px)" motion="twinkle" duration="5s" delay="-2.4s" />
+      {/*
+        Nền be nên hoạ tiết dùng bộ đỏ. Hoạ tiết nằm trên nội dung (z-index 5)
+        nên phải bám sát hai mép — kê vào giữa là đè lên chữ. Hai cái ở lưng
+        chừng chỉ hiện từ tablet trở lên, màn hẹp còn chỗ đâu mà rải.
+      */}
+      <Decor src="red/lips" x="80%" y="8%" w="clamp(56px, 14vw, 118px)" r="-14deg" motion="wobble" duration="7s" />
+      <Decor src="red/starburst" x="90%" y="21%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="5.4s" delay="-1.5s" />
+      <Decor src="red/sparkle" x="3%" y="58%" w="clamp(30px, 7vw, 66px)" motion="twinkle" duration="4.6s" hideOnMobile />
+      <Decor src="red/sparkle" x="90%" y="86%" w="clamp(24px, 5.5vw, 52px)" motion="twinkle" duration="6.2s" delay="-3s" hideOnMobile />
+      <Decor src="red/starburst" x="2%" y="88%" w="clamp(24px, 5.5vw, 52px)" motion="twinkle" duration="5s" delay="-2.4s" />
 
-      <div className="container container--content stack">
-        <Reveal className="section-head" delay={80}>
+      <div className={`container container--content ${s.body}`}>
+        <Reveal className={`section-head ${s.head}`} delay={80}>
           <p className="eyebrow">Thank you</p>
           <h2 id="cam-on-title" className="h2">
             {thanks.title}
@@ -73,7 +77,7 @@ export function ThankYou() {
           ) : null}
         </Reveal>
 
-        <Reveal delay={260}>
+        <Reveal className={s.sign} delay={260}>
           <p className={s.hashtag}>{couple.hashtag}</p>
         </Reveal>
       </div>

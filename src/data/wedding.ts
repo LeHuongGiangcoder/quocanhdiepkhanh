@@ -16,6 +16,11 @@ export const couple = {
   hashtag: "#QuocAnhCuoiDiepKhanh",
 };
 
+/** Chữ ở trang bìa — chỉ hiện khi khách vào bằng link mời riêng */
+export const hero = {
+  invite: "mời bạn đến với đám cưới của",
+};
+
 /** Bố mẹ hai bên — hiện trong section "Thông tin lễ cưới" */
 export const families = [
   {
@@ -76,8 +81,8 @@ export const puzzle = {
   done: "Khớp rồi! Thông tin lễ cưới mở ngay bên dưới nha.",
   locked: "Ghép hai mảnh ảnh phía trên để mở phần này nha",
   pieces: [
-    { src: "/art/puzzle-1.webp", alt: "Chú rể ngồi tựa bên rèm cửa" },
     { src: "/art/puzzle-2.webp", alt: "Cô dâu ngồi bên rèm cửa" },
+    { src: "/art/puzzle-1.webp", alt: "Chú rể ngồi tựa bên rèm cửa" },
   ],
 };
 
@@ -104,6 +109,9 @@ export type Party = {
   tab: string;
   title: string;
   note?: string;
+  /** Giờ mở và giờ tan, dạng "HH:MM" — thời lượng do <Agenda /> tự tính */
+  start: string;
+  end: string;
   items: AgendaItem[];
 };
 
@@ -127,6 +135,8 @@ export const agenda: {
       tab: "Tiệc intimate",
       title: "Buổi chiều của những người thân nhất",
       note: "Một buổi chiều nhỏ, chỉ có những người tụi mình thương nhất.",
+      start: "15:00",
+      end: "17:30",
       items: [
         {
           time: "15:00",
@@ -154,6 +164,8 @@ export const agenda: {
       id: "main",
       tab: "Tiệc chính",
       title: "Buổi tối hôm đó sẽ diễn ra như vầy",
+      start: "17:30",
+      end: "21:00",
       items: [
         {
           time: "17:30",

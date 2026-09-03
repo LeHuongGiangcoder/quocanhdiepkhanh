@@ -35,9 +35,6 @@ export function Dresscode() {
           />
         </Reveal>
 
-        <Reveal delay={140}>
-          <p className={`script ${s.caption}`}>Tụi mình mặc vầy, còn bạn thì sao?</p>
-        </Reveal>
       </div>
     </section>
   );

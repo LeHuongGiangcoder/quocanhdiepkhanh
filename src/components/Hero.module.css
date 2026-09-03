@@ -220,6 +220,16 @@
   transform: none;
 }
 
+/* Dòng thứ hai, nhỏ và nhạt hơn — nối thẳng xuống tên hai đứa ngay bên dưới */
+.invite {
+  display: block;
+  margin-top: 0.15em;
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);
+  letter-spacing: 0.02em;
+  color: rgba(255, 251, 239, 0.66);
+}
+
 /* Tên hai đứa — chỉ hiện sau khi in xong */
 .names {
   display: flex;

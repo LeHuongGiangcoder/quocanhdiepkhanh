@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Decor } from "./Decor";
 import { useGuest } from "./GuestContext";
-import { couple, dateLabel, music } from "@/data/wedding";
+import { couple, dateLabel, hero, music } from "@/data/wedding";
 import s from "./Hero.module.css";
 
 type Phase = "idle" | "printing" | "done";
@@ -130,7 +130,12 @@ export function Hero() {
       <div className={s.after}>
         <div className={s.afterInner}>
           {/* Có link mời riêng thì gọi thẳng tên khách; không có thì bỏ dòng này */}
-          {guest ? <p className={s.dear}>Dear {guest.name},</p> : null}
+          {guest ? (
+            <p className={s.dear}>
+              Dear {guest.name},
+              <span className={s.invite}>{hero.invite}</span>
+            </p>
+          ) : null}
 
           <div className={s.names}>
             <h1 className={s.name}>{couple.groom}</h1>
