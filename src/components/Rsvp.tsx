@@ -1,24 +1,28 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type CSSProperties, type FormEvent } from "react";
+import { useGuest } from "./GuestContext";
 import { Reveal } from "./Reveal";
-import { rsvp } from "@/data/wedding";
+import { rsvp, sheetEndpoint } from "@/data/wedding";
 import s from "./Rsvp.module.css";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 type Payload = {
+  /** Có slug thì Apps Script ghi đè đúng dòng của khách, không thì thêm dòng mới */
+  slug: string;
   name: string;
-  phone: string;
   attending: "yes" | "no";
-  guests: string;
-  message: string;
+  /** Số người đi cùng, KHÔNG tính bản thân khách — khớp cột "Number" trong Sheet */
+  companions: number;
+  companionNames: string;
+  note: string;
   submittedAt: string;
 };
 
 const STORE_KEY = "rsvp-submissions";
 
-/** Lưu lại ở máy khách để không mất dữ liệu khi chưa cắm Google Sheets. */
+/** Lưu lại ở máy khách để không mất dữ liệu khi Sheet chưa nối hoặc mạng rớt. */
 function keepLocally(payload: Payload) {
   try {
     const prev = JSON.parse(localStorage.getItem(STORE_KEY) ?? "[]") as Payload[];
@@ -29,35 +33,40 @@ function keepLocally(payload: Payload) {
 }
 
 export function Rsvp() {
+  const { guest } = useGuest();
   const [status, setStatus] = useState<Status>("idle");
   const [attending, setAttending] = useState<"yes" | "no">("yes");
+  const [companions, setCompanions] = useState(0);
+
+  const question = rsvp.attending[guest?.type ?? "general"];
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
+    const data = new FormData(e.currentTarget);
+    const going = attending === "yes";
 
     const payload: Payload = {
-      name: String(data.get("name") ?? "").trim(),
-      phone: String(data.get("phone") ?? "").trim(),
+      slug: guest?.slug ?? "",
+      name: guest?.name ?? String(data.get("name") ?? "").trim(),
       attending,
-      guests: attending === "yes" ? String(data.get("guests") ?? "1") : "0",
-      message: String(data.get("message") ?? "").trim(),
+      companions: going ? companions : 0,
+      companionNames: going && companions > 0 ? String(data.get("companionNames") ?? "").trim() : "",
+      note: String(data.get("note") ?? "").trim(),
       submittedAt: new Date().toISOString(),
     };
 
     setStatus("sending");
     keepLocally(payload);
 
-    if (!rsvp.endpoint) {
-      // Chưa có endpoint: coi như gửi thành công, dữ liệu nằm ở localStorage.
+    if (!sheetEndpoint) {
+      // Chưa nối Sheet: coi như gửi xong, dữ liệu nằm ở localStorage.
       setStatus("sent");
       return;
     }
 
     try {
       // text/plain để Apps Script không bị chặn bởi CORS preflight.
-      await fetch(rsvp.endpoint, {
+      await fetch(sheetEndpoint, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
@@ -76,7 +85,7 @@ export function Rsvp() {
         <Reveal className="section-head">
           <p className="eyebrow">RSVP</p>
           <h2 id="rsvp-title" className="h2">
-            {rsvp.title}
+            {guest ? `${guest.name} ơi, ${rsvp.title.toLowerCase()}` : rsvp.title}
           </h2>
           <p className="lead">{rsvp.note}</p>
         </Reveal>
@@ -88,37 +97,26 @@ export function Rsvp() {
               <h3 className="h3">{rsvp.successTitle}</h3>
               <p className="script">{rsvp.successNote}</p>
               <button type="button" className="btn btn--outline" onClick={() => setStatus("idle")}>
-                Gửi thêm một lời nữa
+                Sửa lại câu trả lời
               </button>
             </div>
           ) : (
             <form className={s.form} onSubmit={handleSubmit}>
-              <div className={s.two}>
+              {/*
+                Khách vào bằng link mời riêng thì tên đã có sẵn trong Sheet, khỏi
+                hỏi lại. Chỉ ai vào thẳng trang chủ mới phải tự điền.
+              */}
+              {guest ? null : (
                 <div className="field">
                   <label className="label" htmlFor="rsvp-name">
                     Tên của bạn
                   </label>
                   <input className="input" id="rsvp-name" name="name" required autoComplete="name" placeholder="Nguyễn Văn A" />
                 </div>
-                <div className="field">
-                  <label className="label" htmlFor="rsvp-phone">
-                    Số điện thoại
-                  </label>
-                  <input
-                    className="input"
-                    id="rsvp-phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    autoComplete="tel"
-                    inputMode="tel"
-                    placeholder="09xx xxx xxx"
-                  />
-                </div>
-              </div>
+              )}
 
               <fieldset className={s.fieldset}>
-                <legend className="label">Bạn tới được không?</legend>
+                <legend className="label">{question}</legend>
                 <div className="choice">
                   <label className="choice__item">
                     <input
@@ -128,7 +126,7 @@ export function Rsvp() {
                       checked={attending === "yes"}
                       onChange={() => setAttending("yes")}
                     />
-                    <span>Có chứ, tui tới!</span>
+                    <span>{rsvp.attending.yes}</span>
                   </label>
                   <label className="choice__item">
                     <input
@@ -138,37 +136,65 @@ export function Rsvp() {
                       checked={attending === "no"}
                       onChange={() => setAttending("no")}
                     />
-                    <span>Tiếc quá, tui bận mất rồi</span>
+                    <span>{rsvp.attending.no}</span>
                   </label>
                 </div>
               </fieldset>
 
               {attending === "yes" ? (
-                <div className="field">
-                  <label className="label" htmlFor="rsvp-guests">
-                    Bạn đi mấy người?
-                  </label>
-                  <select className="select" id="rsvp-guests" name="guests" defaultValue="1">
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <option key={n} value={n}>
-                        {n} người
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <>
+                  <fieldset className={s.fieldset}>
+                    <legend className="label">{rsvp.companions.question}</legend>
+                    <div className={s.counter}>
+                      <label className="choice__item">
+                        <input
+                          type="radio"
+                          name="companions"
+                          value="0"
+                          checked={companions === 0}
+                          onChange={() => setCompanions(0)}
+                        />
+                        <span>{rsvp.companions.none}</span>
+                      </label>
+                      {Array.from({ length: rsvp.companions.max }, (_, i) => i + 1).map((n) => (
+                        <label key={n} className="choice__item">
+                          <input
+                            type="radio"
+                            name="companions"
+                            value={n}
+                            checked={companions === n}
+                            onChange={() => setCompanions(n)}
+                          />
+                          <span>{n} người</span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  {companions > 0 ? (
+                    <div className="field">
+                      <label className="label" htmlFor="rsvp-companions">
+                        {rsvp.companions.namesLabel}
+                      </label>
+                      <input
+                        className="input"
+                        id="rsvp-companions"
+                        name="companionNames"
+                        placeholder={rsvp.companions.namesPlaceholder}
+                      />
+                    </div>
+                  ) : null}
+                </>
               ) : null}
 
               <div className="field">
-                <label className="label" htmlFor="rsvp-message">
-                  Nhắn cho tụi mình một câu nha
+                <label className="label" htmlFor="rsvp-note">
+                  {rsvp.message.label}
                 </label>
-                <textarea
-                  className="textarea"
-                  id="rsvp-message"
-                  name="message"
-                  placeholder="Chúc hai đứa cưới xong vẫn còn thương nhau nhiều như vậy…"
-                />
+                <textarea className="textarea" id="rsvp-note" name="note" placeholder={rsvp.message.placeholder} />
               </div>
+
+              <p className={`script ${s.closing}`}>{rsvp.closing}</p>
 
               {status === "error" ? (
                 <p className="error">Gửi chưa được, bạn thử lại giúp tụi mình một lần nữa nha.</p>
@@ -187,7 +213,7 @@ export function Rsvp() {
                 </button>
                 <img
                   className={`${s.blink} twinkle`}
-                  style={{ "--delay": "-2.4s" } as React.CSSProperties}
+                  style={{ "--delay": "-2.4s" } as CSSProperties}
                   src="/art/red/starburst.webp"
                   alt=""
                   aria-hidden="true"

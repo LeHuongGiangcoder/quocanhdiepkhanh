@@ -8,7 +8,7 @@
      3. Layout          – .section, .container, .stack, .section-head
      4. Typography      – .display, .h1…h4, .eyebrow, .lead, .caption, .script
      5. Buttons         – .btn, .btn--stamp, .btn--outline, .btn--ghost
-     6. Surfaces        – .sheet, .seal, .stamp, .calendar, .chip
+     6. Surfaces        – .sheet, .seal, .stamp, .chip
      7. Form            – .field, .input, .textarea, .choice
      8. Decor & motion  – .decor, .sway, .float, .wobble, .reveal
      9. Utilities
@@ -64,6 +64,7 @@
   /* Typography */
   --font-display: var(--font-fraunces), "Playfair Display", Georgia, serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-dancing), "Segoe Script", cursive;
 
   --fs-display: clamp(3rem, 1.35rem + 7vw, 6.5rem);
   --fs-h1: clamp(2.25rem, 1.25rem + 4.3vw, 4.25rem);
@@ -700,104 +701,6 @@ a {
   width: clamp(56px, 13vw, 88px);
   margin: clamp(-2.5rem, -3.5vw, -1.25rem) auto 0;
   rotate: -6deg;
-}
-
-/*
-   Cuốn lịch tháng cưới. Bảng 7 cột, ngày cưới được khoanh tròn đỏ.
-   Toàn bộ số liệu do <Calendar /> tính từ `weddingDate`.
-*/
-.calendar {
-  width: min(100%, 26rem);
-  margin-inline: auto;
-  text-align: center;
-}
-
-.calendar__month {
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--fg-head);
-  margin-bottom: var(--sp-md);
-}
-
-.calendar__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.35rem 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-variant-numeric: tabular-nums;
-}
-
-.calendar__dow {
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--fg-muted);
-  padding-bottom: 0.5rem;
-}
-
-.calendar__day {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  font-size: var(--fs-sm);
-  color: var(--fg);
-}
-
-.calendar__day--empty {
-  visibility: hidden;
-}
-
-/* Ngày cưới */
-.calendar__day--mark {
-  position: relative;
-  color: var(--c-cream);
-  font-weight: 600;
-}
-
-.calendar__day--mark::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: 2.1em;
-  height: 2.1em;
-  border-radius: var(--r-pill);
-  background: var(--c-red);
-}
-
-.calendar__rule {
-  width: 100%;
-  height: 0;
-  margin-block: var(--sp-md);
-  border: 0;
-  border-top: 1px dashed var(--rule);
-}
-
-.calendar__label {
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-}
-
-.calendar__date {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.75rem, 1.1rem + 2.8vw, 3rem);
-  letter-spacing: 0.02em;
-  line-height: 1.15;
-  color: var(--fg-head);
-  font-variation-settings: "SOFT" 24, "WONK" 0, "opsz" 96;
-}
-
-.calendar__heart {
-  width: 0.9rem;
-  margin: 0.35rem auto 0;
-  color: var(--c-red);
 }
 
 /* Khung tem thư bọc quanh ảnh */

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Decor } from "./Decor";
+import { useGuest } from "./GuestContext";
 import { couple, dateLabel, music } from "@/data/wedding";
 import s from "./Hero.module.css";
 
@@ -14,6 +15,7 @@ type Phase = "idle" | "printing" | "done";
 const PRINT_FALLBACK_MS = 3200;
 
 export function Hero() {
+  const { guest } = useGuest();
   const [phase, setPhase] = useState<Phase>("idle");
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -54,7 +56,7 @@ export function Hero() {
   }
 
   function scrollToNext() {
-    document.getElementById("thong-tin")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("album")?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -98,7 +100,7 @@ export function Hero() {
           >
             <img
               className="stamp__photo"
-              src="/art/couple-1.webp"
+              src="/art/hero-1.webp"
               alt={`${couple.groomFull} và ${couple.brideFull}`}
               width={708}
               height={1008}
@@ -127,6 +129,9 @@ export function Hero() {
       */}
       <div className={s.after}>
         <div className={s.afterInner}>
+          {/* Có link mời riêng thì gọi thẳng tên khách; không có thì bỏ dòng này */}
+          {guest ? <p className={s.dear}>Dear {guest.name},</p> : null}
+
           <div className={s.names}>
             <h1 className={s.name}>{couple.groom}</h1>
             <span className={s.amp}>

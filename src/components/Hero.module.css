@@ -198,6 +198,28 @@
   overflow: hidden;
 }
 
+/*
+   Lời chào riêng cho khách có link mời. Hiện cùng nhịp với tên hai đứa nhưng
+   sớm hơn một chút, để mắt đọc "Dear …" trước rồi mới tới tên cô dâu chú rể.
+*/
+.dear {
+  font-family: var(--font-hand);
+  font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.65rem);
+  line-height: 1.2;
+  text-align: center;
+  color: rgba(255, 251, 239, 0.9);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 800ms var(--ease-out) 60ms,
+    transform 800ms var(--ease-out) 60ms;
+}
+
+.done .dear {
+  opacity: 1;
+  transform: none;
+}
+
 /* Tên hai đứa — chỉ hiện sau khi in xong */
 .names {
   display: flex;

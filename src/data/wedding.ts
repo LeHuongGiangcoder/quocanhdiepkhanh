@@ -13,56 +13,154 @@ export const couple = {
   bride: "Diệp Khanh",
   groomFull: "Nguyễn Quốc Anh",
   brideFull: "Phạm Diệp Khanh",
-  groomParents: ["Ông Nguyễn Văn Hùng", "Bà Trần Thị Lan"],
-  brideParents: ["Ông Phạm Minh Tuấn", "Bà Lê Thị Hồng"],
   hashtag: "#QuocAnhCuoiDiepKhanh",
 };
 
-/** Mốc thời gian dùng cho đồng hồ đếm ngược (giờ Việt Nam, UTC+7) */
-export const weddingDate = "2026-11-08T11:00:00+07:00";
+/** Bố mẹ hai bên — hiện trong section "Thông tin lễ cưới" */
+export const families = [
+  {
+    side: "Nhà trai",
+    people: [
+      { role: "Bố iu", name: "Trịnh Thanh Hải" },
+      { role: "Mẹ iu", name: "Lê Thị Hoà" },
+    ],
+  },
+  {
+    side: "Nhà gái",
+    people: [
+      { role: "Bố iu", name: "Đàm Thận Tiệp" },
+      { role: "Mẹ iu", name: "Nguyễn Thị Quỳnh Trang" },
+    ],
+  },
+];
+
+/** Giờ khai tiệc chính (giờ Việt Nam, UTC+7) — tờ lịch và đồng hồ đếm ngược đều tính từ đây */
+export const weddingDate = "2026-09-25T17:30:00+07:00";
 
 export const dateLabel = {
-  weekday: "Chủ Nhật",
-  day: "08",
-  month: "11",
+  weekday: "Thứ Sáu",
+  day: "25",
+  month: "09",
   year: "2026",
-  lunar: "Nhằm ngày 30 tháng 9 năm Bính Ngọ",
+  lunar: "Nhằm ngày 15 tháng 8 âm lịch",
+};
+
+/** Album ảnh cưới — mỗi tấm là một ô trên cuộn phim ở section "Album" */
+export const gallery = {
+  eyebrow: "Album",
+  title: "Cuộn phim của tụi mình",
+  note: "36 kiểu, tụi mình chọn ra mấy tấm ưng nhất.",
+  /** Gợi ý cho người xem biết dải phim kéo ngang được */
+  hint: "vuốt sang phải để xem tiếp",
+  shots: [
+    { src: "/gallery/01.webp", alt: "Cô dâu chú rể sau tấm voan ren" },
+    { src: "/gallery/02.webp", alt: "Hai đứa đứng trước hiên nhà gỗ, tay ôm bó hoa" },
+    { src: "/gallery/03.webp", alt: "Ôm nhau bên hồ lúc trời sẩm tối" },
+    { src: "/gallery/04.webp", alt: "Dựa vai nhau bên khung cửa phủ dây leo" },
+    { src: "/gallery/05.webp", alt: "Ảnh trắng đen, hai đứa mặc vest chỉnh tề" },
+    { src: "/gallery/06.webp", alt: "Đứng giữa mặt hồ phẳng lặng, núi phía sau" },
+    { src: "/gallery/07.webp", alt: "Bức tường dán đầy ảnh chụp chung" },
+    { src: "/gallery/08.webp", alt: "Cô dâu nằm nghỉ trên ga giường trắng" },
+    { src: "/gallery/09.webp", alt: "Cô dâu ôm bó loa kèn trắng" },
+    { src: "/gallery/10.webp", alt: "Chú rể chụp chân dung trắng đen" },
+  ],
+};
+
+/**
+ * Trò ghép hình chặn trước phần thông tin lễ cưới: ghép xong hai mảnh thì
+ * section bên dưới mới mở.
+ */
+export const puzzle = {
+  title: "Ghép hai đứa lại nha",
+  prompt: "Kéo mảnh bên phải cho khớp vào mảnh bên trái",
+  done: "Khớp rồi! Thông tin lễ cưới mở ngay bên dưới nha.",
+  locked: "Ghép hai mảnh ảnh phía trên để mở phần này nha",
+  pieces: [
+    { src: "/art/puzzle-1.webp", alt: "Chú rể ngồi tựa bên rèm cửa" },
+    { src: "/art/puzzle-2.webp", alt: "Cô dâu ngồi bên rèm cửa" },
+  ],
 };
 
 export const venue = {
-  name: "Trung tâm Hội nghị Hoa Sứ",
-  hall: "Sảnh Ngọc Lan · Lầu 2",
-  address: "45 Trần Hưng Đạo, P. Bến Nghé, Q.1, TP. Hồ Chí Minh",
-  mapUrl: "https://maps.google.com/?q=45+Tran+Hung+Dao+Ben+Nghe+Quan+1+Ho+Chi+Minh",
-  note: "Có bãi giữ xe ngay trong sân, bạn cứ chạy thẳng vào nha.",
+  name: "Forevermark Tây Hồ",
+  hall: "Tầng 2",
+  address: "614 đường Lạc Long Quân, Tây Hồ, Hà Nội",
+  mapUrl: "https://maps.google.com/?q=Forevermark+614+Lac+Long+Quan+Tay+Ho+Ha+Noi",
+  note: "Tới sớm một chút để còn kịp chụp hình với tụi mình nha.",
 };
 
 /** `icon` là tên file trong /public/art/beige và /public/art/red (cùng tên, hai màu) */
-export type AgendaItem = { time: string; title: string; icon: string };
+export type AgendaItem = { time: string; title: string; note?: string; icon: string };
 
-export const agenda: AgendaItem[] = [
-  { time: "17:00", title: "Đón khách", icon: "letters" },
-  { time: "18:00", title: "Khai tiệc", icon: "champagne" },
-  { time: "18:30", title: "Lễ thành hôn", icon: "bow" },
-  { time: "19:00", title: "Cắt bánh", icon: "cake" },
-  { time: "19:30", title: "Dùng tiệc", icon: "cake-slice" },
-  { time: "20:30", title: "Chụp ảnh lưu niệm", icon: "cupcake" },
-];
+/**
+ * Hai chặng của ngày cưới. Chặng `intimate` chỉ hiện với khách được mời dự tiệc
+ * chiều — xem `invitationType` trong <GuestProvider />.
+ */
+export const agenda = {
+  intimate: {
+    eyebrow: "Tiệc intimate",
+    title: "Buổi chiều của những người thân nhất",
+    items: [
+      { time: "15:00", title: "Welcoming", note: "Photobooth, tiệc sún răng", icon: "cupcake" },
+      { time: "16:00", title: "Vows ceremony", icon: "bow" },
+      { time: "16:45", title: "Gap time", note: "Nghỉ ngơi, chờ tiệc chính", icon: "champagne" },
+    ] satisfies AgendaItem[],
+  },
+  main: {
+    eyebrow: "Agenda",
+    title: "Buổi tối hôm đó sẽ diễn ra như vầy",
+    items: [
+      { time: "17:30", title: "Đón khách", icon: "letters" },
+      { time: "18:00", title: "Làm lễ", icon: "bow" },
+      { time: "18:30", title: "Khai tiệc", icon: "champagne" },
+      { time: "19:30", title: "Games & quẩy", icon: "cake" },
+    ] satisfies AgendaItem[],
+  },
+};
 
 export const dresscode = {
   title: "Dresscode",
-  headline: "Bộ đồ đẹp nhất trong tủ đồ của bạn",
-  note: "Không luật lệ gì đâu — mặc thứ khiến bạn thấy mình xinh nhất là được rồi.",
+  headline: "Đừng quan trọng màu sắc hay phong cách",
+  note: "Hãy cùng nhau lên ảnh thật là đẹp 🩲👙",
 };
+
+/**
+ * URL của Google Apps Script Web App — dùng chung cho cả hai chiều:
+ * GET  ?slug=… để tra tên khách từ Sheet
+ * POST để ghi câu trả lời ngược lại đúng dòng của khách đó
+ *
+ * Xem docs/guest-management-google-sheets.md. Để trống thì trang vẫn chạy:
+ * không tra được tên, và câu trả lời chỉ lưu tạm ở localStorage.
+ */
+export const sheetEndpoint = process.env.NEXT_PUBLIC_RSVP_ENDPOINT ?? "";
+
+/** Hai kiểu thiệp — khớp với cột "Invitation type" trong Sheet */
+export type InvitationType = "intimate" | "general";
 
 export const rsvp = {
   title: "Bạn tới với tụi mình nha?",
   note: "Nhắn giùm tụi mình một tiếng để còn chuẩn bị chỗ ngồi thật đẹp cho bạn.",
-  /**
-   * URL của Google Apps Script Web App (xem docs/rsvp-google-sheets.md).
-   * Để trống thì form vẫn chạy bình thường, dữ liệu lưu tạm ở localStorage.
-   */
-  endpoint: process.env.NEXT_PUBLIC_RSVP_ENDPOINT ?? "",
+  /** Câu 1 đổi chữ theo kiểu thiệp: khách intimate được mời từ chiều */
+  attending: {
+    intimate: "Bạn sẽ có mặt cùng chúng mình từ chiều chứ?",
+    general: "Bạn sẽ có mặt cùng chúng mình chứ?",
+    yes: "Có chứ, tui tới!",
+    no: "Tiếc quá, tui bận mất rồi",
+  },
+  companions: {
+    question:
+      "Bạn có đi cùng người thương không? Nếu có, hãy cho bọn mình biết để người thương cũng sẽ được đón chào chu đáo nhé 🎀",
+    none: "Tui đi một mình",
+    /** Số người đi cùng khách, không tính khách */
+    max: 4,
+    namesLabel: "Tên người đi cùng",
+    namesPlaceholder: "Ví dụ: Ngọc Anh, Minh Thư",
+  },
+  message: {
+    label: "Nhắn cho tụi mình một câu nha",
+    placeholder: "Chúc hai đứa cưới xong vẫn còn thương nhau nhiều như vậy…",
+  },
+  closing: "Nếu có câu hỏi hoặc cần trợ giúp, đừng ngại nhắn cho cô dâu chú rể nhé 🎀 Luôn có mặt 💓",
   successTitle: "Nhận được rồi nè!",
   successNote: "Cảm ơn bạn thiệt nhiều. Tụi mình sẽ giữ sẵn một chỗ ngồi xinh xinh cho bạn.",
 };
@@ -70,7 +168,6 @@ export const rsvp = {
 export const thanks = {
   title: "Cảm ơn bạn",
   lines: [
-    "Ngày vui mà thiếu bạn thì không trọn được.",
     "Hẹn gặp bạn ở đám cưới — nhớ đói bụng sẵn nha!",
   ],
   signature: "Thương nhiều, Quốc Anh & Diệp Khanh",

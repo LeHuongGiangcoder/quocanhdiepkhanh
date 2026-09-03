@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Dancing_Script, Fraunces, Inter } from "next/font/google";
 import { couple, dateLabel } from "@/data/wedding";
 import "./globals.css";
 
@@ -13,6 +13,17 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
   axes: ["SOFT", "WONK", "opsz"],
   variable: "--font-fraunces",
+  display: "swap",
+});
+
+/*
+  Dancing Script cho những dòng viết tay dán lên tờ lịch — một trong số ít
+  script font của Google có đủ dấu tiếng Việt.
+*/
+const dancing = Dancing_Script({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "600", "700"],
+  variable: "--font-dancing",
   display: "swap",
 });
 
@@ -38,10 +49,10 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     images: [
       {
-        url: "/couple/couple%201.png",
+        url: "/art/og.jpg",
         width: 1200,
         height: 630,
-        alt: "Groom & Bride",
+        alt: "Quốc Anh và Diệp Khanh",
       },
     ],
   },
@@ -49,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/couple/couple%201.png"],
+    images: ["/art/og.jpg"],
   },
 };
 
@@ -59,7 +70,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="vi" className={`${fraunces.variable} ${inter.variable} ${dancing.variable}`}>
       <body>{children}</body>
     </html>
   );
