@@ -9,9 +9,22 @@ import s from "./Gallery.module.css";
 /** Cuộn đi bao nhiêu thì coi như người xem đã hiểu là kéo ngang được */
 const SEEN = 24;
 
+/** Lời mời tự cuộn một nhịp bấy nhiêu px rồi trả về chỗ cũ */
+const NUDGE = 64;
+
+/*
+   Hộp phim trượt ra khỏi màn hình khi người xem kéo qua mốc này, và chỉ trượt
+   về khi kéo ngược lại gần đầu. Hai mốc lệch nhau để hộp không rung khi tay
+   dừng đúng ranh giới — và mốc trượt ra phải lớn hơn NUDGE, nếu không cú cuộn
+   mồi sẽ tự đẩy hộp đi ngay khi section vừa lọt vào khung nhìn.
+*/
+const CAN_OUT = 120;
+const CAN_BACK = 40;
+
 export function Gallery() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [moved, setMoved] = useState(false);
+  const [canOut, setCanOut] = useState(false);
 
   /*
      Lần đầu cuộn tới, đẩy dải phim nhích một nhịp rồi trả về chỗ cũ. Nói "kéo
@@ -27,7 +40,7 @@ export function Gallery() {
         if (!entry.isIntersecting) return;
         observer.disconnect();
         if (track.scrollLeft > SEEN) return;
-        track.scrollTo({ left: 64, behavior: "smooth" });
+        track.scrollTo({ left: NUDGE, behavior: "smooth" });
         window.setTimeout(() => track.scrollTo({ left: 0, behavior: "smooth" }), 620);
       },
       { threshold: 0.35 },
@@ -49,7 +62,7 @@ export function Gallery() {
         </Reveal>
       </div>
 
-      <div className={s.reel}>
+      <div className={s.reel} data-can-out={canOut || undefined}>
         <img className={s.can} src="/art/film-can.webp" alt="" aria-hidden="true" />
 
         <div
@@ -58,7 +71,11 @@ export function Gallery() {
           tabIndex={0}
           role="group"
           aria-label={gallery.title}
-          onScroll={(e) => setMoved(e.currentTarget.scrollLeft > SEEN)}
+          onScroll={(e) => {
+            const x = e.currentTarget.scrollLeft;
+            setMoved(x > SEEN);
+            setCanOut((out) => (out ? x > CAN_BACK : x > CAN_OUT));
+          }}
         >
           {gallery.shots.map((shot) => (
             <figure key={shot.src} className={s.frame}>
