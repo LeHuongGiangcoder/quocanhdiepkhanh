@@ -134,7 +134,6 @@ export const agenda: {
       id: "intimate",
       tab: "Tiệc intimate",
       title: "Buổi chiều của những người thân nhất",
-      note: "Một buổi chiều nhỏ, chỉ có những người tụi mình thương nhất.",
       start: "15:00",
       end: "17:30",
       items: [

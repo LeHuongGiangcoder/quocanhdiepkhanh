@@ -92,7 +92,7 @@ export function Agenda() {
       <Decor src="beige/bouquet" x="-2%" y="82%" w="clamp(58px, 14vw, 124px)" r="8deg" motion="sway" duration="9.5s" delay="-3s" hideOnMobile />
 
       <div className="container container--content">
-        <Reveal className="section-head">
+        <Reveal className={`section-head ${!current.note ? s.headNoNote : ""}`}>
           <p className="eyebrow">{agenda.eyebrow}</p>
           <h2 className="h2">{current.title}</h2>
           {current.note ? <p className="lead">{current.note}</p> : null}

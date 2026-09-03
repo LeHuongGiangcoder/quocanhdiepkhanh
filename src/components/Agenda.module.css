@@ -4,6 +4,14 @@
    Chạm vào ảnh là thả tim.
 */
 
+.headNoNote {
+  margin-bottom: var(--gap-stack) !important;
+}
+
+.headNoNote + .panel {
+  margin-top: var(--gap-stack);
+}
+
 .panel {
   --pad: clamp(0.9rem, 0.6rem + 1.4vw, 1.5rem);
 
